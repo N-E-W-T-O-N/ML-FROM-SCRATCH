@@ -3,11 +3,17 @@
 {
 	"name": "C# (.NET)",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet",
+	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	 "features": {
+	"features": {
 		"ghcr.io/devcontainers/features/dotnet:2": "latest"
-	 },
+	},
+	"workspaceFolder": "/home/vscode",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/home/vscode,type=bind",
+	//"postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
+	"containerEnv": {
+        "DOTNET_ROOT": "/root/.dotnet",
+	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [5000, 5001],
 	// "portsAttributes": {
@@ -25,7 +31,7 @@
 		"5001": {
 			"protocol": "https"
 		}
-	}
+	},
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "dotnet restore",
 	// Configure tool-specific properties.

@@ -8,17 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Salary_Data.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Salary_Data.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Remove="data.csv" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="30.1.0" />
+    <PackageReference Include="ScottPlot" Version="5.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="data.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
