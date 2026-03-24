@@ -1,11 +1,32 @@
-﻿using CsvHelper.Configuration;
+﻿#:package CsvHelper
+#:package ScottPlot
+
 using CsvHelper;
+using CsvHelper.Configuration;
+using CsvHelper.Configuration.Attributes;
 using ScottPlot;
 using System.Globalization;
-using CsvHelper.Configuration.Attributes;
 
 namespace Program
 {
+    public class TestClass
+    {
+        public static void Main(String[] args)
+        {
+            var lr = new LinearRegression();
+
+            //Read from CSV file
+            lr.ReadCSV(Path.Join(Directory.GetCurrentDirectory(),"data.csv"));
+            //Train to Find Weight
+            lr.TrainModel();
+            //Calcuate Error using Root Mean Square(RMS)
+            lr.CalculateError();
+            Console.WriteLine($"RMS := {lr.RMS}");
+            //Create the Chart
+            lr.PlotChart();
+        }
+    }
+
     public class LinearRegression
     {
         List<Info> data_set;
@@ -70,8 +91,8 @@ namespace Program
             //Same as weight[weight.count-1] -weight[weight.count-2]
             while (i <= iteration)
             {
-                float weight_derv = (weight.Last() * XX + bias.Last() * X - XY);
-                float bias_derv = (weight.Last() * X + bias.Last() - Y);
+                float weight_derv = weight[^1] * XX + bias.Last() * X - XY;
+                float bias_derv = weight.Last() * X + bias.Last() - Y;
 
                 weight.Add(weight.Last() - 0.5f * alpha * weight_derv / total);
                 bias.Add(bias.Last() - 0.5f * alpha * bias_derv / total);
@@ -131,36 +152,34 @@ namespace Program
             {
                 new LegendItem()
                 {
-                    Label = "Data",
-                    Marker= new MarkerStyle() {Shape = MarkerShape.Asterisk},
+                    LabelText   = "Data",
+                    MarkerShape = MarkerShape.Asterisk,
                     MarkerColor = Colors.Blue,
-                    Line = LineStyle.None
+                    MarkerSize  = 10
                 },
                 new LegendItem()
                 {
-                    Label = "Regression Line",
-                    LineWidth=2,
-                    LineColor= Colors.Red,
-                    Marker = MarkerStyle.None
+                    LabelText = "Regression Line",
+                    LineWidth = 2,
+                    LineColor = Colors.Red,
                 },
                 new LegendItem()
                 {
-                    Label = $" RMS := {RMS}",
-                    Marker=MarkerStyle.None,
-                    Line=LineStyle.None,
+                    LabelText   = $" RMS := {RMS}",
+                    MarkerStyle = MarkerStyle.None,
                 }
             };
 
             myPlot.ShowLegend(legendItems, Alignment.LowerRight);
 
-            myPlot.SavePng("../../../LinearRegression.png", 600, 500);
+            myPlot.SavePng("LinearRegression.png", 600, 500);
         }
 
         public float RegressionLine(float x)
         {
             if (weight.Count == 0)
                 throw new NotImplementedException("First Train the Model");
-            else return weight.Last() * x + bias.Last();
+            else return weight[^1] * x + bias[^1];
         }
     }
 
